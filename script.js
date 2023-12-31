@@ -4,10 +4,11 @@ const timer_element = document.getElementById("timer");
 const btn_start = document.getElementById("start");
 const btn_pause = document.getElementById("pause");
 const btn_reset = document.getElementById("reset");
+const timer_head = document.getElementById("timer-head");
 
-// Initialization
 const init = function () {
   timer_element.textContent = "00:25:00";
+  timer_head.textContent = "Work";
 };
 
 init();
@@ -15,6 +16,7 @@ init();
 // timer value variables
 let [seconds, minutes, hours] = [0, 25, 0];
 let timer_time = null;
+let is_work = true;
 
 // stop watch decrement function
 const stopwatch = function () {
@@ -28,6 +30,18 @@ const stopwatch = function () {
       if (minutes < 0) {
         minutes = 59;
         hours--;
+
+        if (hours < 0) {
+          // switch between work and break
+          is_work = !is_work;
+          if (is_work) {
+            [seconds, minutes, hours] = [0, 25, 0];
+            timer_head.textContent = "Work";
+          } else {
+            [seconds, minutes, hours] = [0, 5, 0];
+            timer_head.textContent = "Break";
+          }
+        }
       }
     }
 
@@ -57,6 +71,7 @@ const watch_reset = function () {
   clearInterval(timer_time);
   [seconds, minutes, hours] = [0, 25, 0];
   timer_element.innerHTML = "00:25:00";
+  timer_head.textContent = "Work";
 };
 
 btn_start.addEventListener("click", watch_start);
